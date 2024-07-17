@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
+
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const Start = ({ navigation }) => {
