@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: "#fff",
     fontWeight: "300",
-    fontSize: "16",
+    fontSize: 16,
     opacity: 50,
   },
   chooseBgColor: {
