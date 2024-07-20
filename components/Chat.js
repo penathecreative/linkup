@@ -11,8 +11,10 @@ import {
   orderBy,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
 
-const Chat = ({ db, route, navigation, isConnected }) => {
+const Chat = ({ db, route, navigation, isConnected, storage }) => {
   const { userID } = route.params;
 
   const { name, background } = route.params;
@@ -95,6 +97,34 @@ const Chat = ({ db, route, navigation, isConnected }) => {
     setMessages(JSON.parse(cachedMessages));
   };
 
+  const renderCustomActions = (props) => {
+    return (
+      <CustomActions
+        storage={storage}
+        userID={userID}
+        {...props}
+      />
+    );
+  };
+
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: background }]}>
       <GiftedChat
@@ -102,6 +132,8 @@ const Chat = ({ db, route, navigation, isConnected }) => {
         renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
         onSend={(messages) => onSend(messages)}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         user={{
           _id: userID,
           name: name,
@@ -114,8 +146,15 @@ const Chat = ({ db, route, navigation, isConnected }) => {
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
 Chat.propTypes = {
   db: PropTypes.object.isRequired,
+  storage: PropTypes.object.isRequired, // Added this line
   route: PropTypes.shape({
     params: PropTypes.shape({
       userID: PropTypes.string.isRequired,
@@ -126,11 +165,5 @@ Chat.propTypes = {
   navigation: PropTypes.object.isRequired,
   isConnected: PropTypes.bool.isRequired,
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default Chat;

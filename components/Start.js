@@ -43,7 +43,7 @@ const Start = ({ navigation }) => {
         source={require("../assets/background-image.png")}
         style={styles.imageBackground}
       >
-        <Text style={styles.title}>Chat App</Text>
+        <Text style={styles.title}>Linkup!</Text>
 
         <View style={styles.inputContainer}>
           <TextInput
